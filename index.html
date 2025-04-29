@@ -262,57 +262,62 @@
   <script>
     const contact_event_id = 'contact_' + Date.now();
 
-    function trackContactEvent() {
-  const contact_event_id = 'contact_' + Date.now();
-
-  fbq('track', 'ContactWhatsApp', {
-    value: 1.00,
-    currency: 'ARS'
-  }, {
-    eventID: contact_event_id
-  });
-
-  // Función para leer cookies específicas
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
 
-  const fbp = getCookie('_fbp') || '';
-  const fbc = getCookie('_fbc') || '';
+  function trackContactEvent() {
+    const contact_event_id = 'contact_' + Date.now();
 
-  fetch('https://graph.facebook.com/v19.0/660415223620037/events?access_token=EAATi1xnmdYsBO9eDYNvhTtBca9dMFswWUSIedxSL9dROJWpuAgzBU6LFJtGbWL3FNvB7c2RS9KZAatFxecNmfCKq8dEEoinujJnJeUgLgx4medC6lQPTzmRA1PPiVM1RVZAIWYQVvtM1KMSZBxzDEM11XIHEZA4fZCZC0UOqZCB7alIZAuewGRzmMvd29z1Hr9SBpAZDZD', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      event_id: contact_event_id,
-      data: [
-        {
-          event_name: "ContactWhatsApp",
-          event_time: Math.floor(Date.now() / 1000),
-          event_id: contact_event_id,
-          action_source: "website",
-          user_data: {
-            client_user_agent: navigator.userAgent,
-            fbp: fbp,
-            fbc: fbc
-          },
-          custom_data: {
-            value: 1.00,
-            currency: 'ARS'
+    let fbp = getCookie('_fbp') || '';
+    let fbc = getCookie('_fbc');
+
+    // Si no existe fbc, lo generamos a mano (esto mejora la coincidencia)
+    if (!fbc && document.referrer.includes('facebook.com')) {
+      fbc = 'fb.1.' + Math.floor(Date.now() / 1000) + '.' + Math.random().toString(36).substring(2);
+    }
+
+    fbq('track', 'ContactWhatsApp', {
+      value: 1.00,
+      currency: 'ARS'
+    }, {
+      eventID: contact_event_id
+    });
+
+    fetch('https://graph.facebook.com/v19.0/660415223620037/events?access_token=EAATi1xnmdYsBO9eDYNvhTtBca9dMFswWUSIedxSL9dROJWpuAgzBU6LFJtGbWL3FNvB7c2RS9KZAatFxecNmfCKq8dEEoinujJnJeUgLgx4medC6lQPTzmRA1PPiVM1RVZAIWYQVvtM1KMSZBxzDEM11XIHEZA4fZCZC0UOqZCB7alIZAuewGRzmMvd29z1Hr9SBpAZDZD', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        event_id: contact_event_id,
+        data: [
+          {
+            event_name: "ContactWhatsApp",
+            event_time: Math.floor(Date.now() / 1000),
+            event_id: contact_event_id,
+            action_source: "website",
+            user_data: {
+              client_user_agent: navigator.userAgent,
+              fbp: fbp,
+              fbc: fbc
+            },
+            custom_data: {
+              value: 1.00,
+              currency: 'ARS'
+            }
           }
-        }
-      ]
-    })
-  }).then(response => {
-    console.log("✅ Evento ContactWhatsApp enviado correctamente a la API con cookies.");
-  }).catch(error => {
-    console.error("❌ Error al enviar evento ContactWhatsApp a la API:", error);
-  });
-}
+        ]
+      })
+    }).then(response => {
+      console.log("✅ Evento ContactWhatsApp enviado correctamente con fbp y fbc.");
+    }).catch(error => {
+      console.error("❌ Error al enviar evento ContactWhatsApp:", error);
+    });
+  }
+</script>
     
    const mensajes = [
       "Carla: Super confiable, me abonaron al instante",
