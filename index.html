@@ -2,6 +2,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <!-- Meta Pixel Code -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=true;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(
+      window, document, 'script',
+      'https://connect.facebook.net/es_LA/fbevents.js'
+    );
+    fbq('init', '660415223620037');
+    fbq('track', 'PageView');
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=660415223620037&ev=PageView&noscript=1"
+    />
+  </noscript>
+  <!-- End Meta Pixel Code -->
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ases del Norte - Red Verificada</title>
@@ -44,7 +66,7 @@
       height: 140px;
       border-radius: 50%;
       margin: 1em auto;
-      background: url('logo.jpg') no-repeat center center;
+      background: url('logoia2.png') no-repeat center center;
       background-size: cover;
       box-shadow: 0 0 15px #fff;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -195,16 +217,28 @@
   <div class="overlay"></div>
   <div class="container">
     <div class="logo"></div>
-    <h1>¡Uníte a los que ya están ganando!</h1>
-    <h2>Hablá con nosotros por WhatsApp y activá tu cuenta en minutos</h2>
+    <h1>🍀 UNITE A LOS QUE ESTAN GANANDO 🍀</h1>
+    <h2>👇🏽 Toca el boton y comunicate ahora mismo 👇🏽</h2>
     <div class="cta">
-      <a href="https://wa.me/541171961646?text=Hola%2C%20quiero%20comunicarme%20con%20un%20cajero%20disponible" class="cta-button">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
-        Contactar por WhatsApp
-      </a>
-    </div>
+  <a href="#" class="cta-button" onclick="handleWhatsAppClick()">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" />
+    Contactar por WhatsApp
+  </a>
+</div>
+
+<script>
+  function handleWhatsAppClick() {
+  trackContactEvent();
+  console.log("👉 Disparando evento ContactWhatsApp...");
+  setTimeout(() => {
+   window.location.href = "https://api.whatsapp.com/send?phone=5493512529124&text=Hola,%20quiero%20comunicarme%20con%20un%20cajero%20disponible";
+  }, 1000); // 1.0 segundos para asegurar ejecución
+}
+
+</script>
+
     <div class="benefits">
-      <h3>Activá tu cuenta y recibí un bono de bienvenida exclusivo.</h3>
+      <h3>🔥 ACTIVOS 24/7 - PAGOS EN EL ACTO SIN LIMITES 🔥</h3>
     </div>
   </div>
 
@@ -226,14 +260,72 @@
   <div class="notif" id="notifBox"></div>
 
   <script>
-    const mensajes = [
+    const contact_event_id = 'contact_' + Date.now();
+
+    function trackContactEvent() {
+  const contact_event_id = 'contact_' + Date.now();
+
+  fbq('track', 'ContactWhatsApp', {
+    value: 1.00,
+    currency: 'ARS'
+  }, {
+    eventID: contact_event_id
+  });
+
+  // Función para leer cookies específicas
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const fbp = getCookie('_fbp') || '';
+  const fbc = getCookie('_fbc') || '';
+
+  fetch('https://graph.facebook.com/v19.0/660415223620037/events?access_token=EAATi1xnmdYsBO9eDYNvhTtBca9dMFswWUSIedxSL9dROJWpuAgzBU6LFJtGbWL3FNvB7c2RS9KZAatFxecNmfCKq8dEEoinujJnJeUgLgx4medC6lQPTzmRA1PPiVM1RVZAIWYQVvtM1KMSZBxzDEM11XIHEZA4fZCZC0UOqZCB7alIZAuewGRzmMvd29z1Hr9SBpAZDZD', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      event_id: contact_event_id,
+      data: [
+        {
+          event_name: "ContactWhatsApp",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: contact_event_id,
+          action_source: "website",
+          user_data: {
+            client_user_agent: navigator.userAgent,
+            fbp: fbp,
+            fbc: fbc
+          },
+          custom_data: {
+            value: 1.00,
+            currency: 'ARS'
+          }
+        }
+      ]
+    })
+  }).then(response => {
+    console.log("✅ Evento ContactWhatsApp enviado correctamente a la API con cookies.");
+  }).catch(error => {
+    console.error("❌ Error al enviar evento ContactWhatsApp a la API:", error);
+  });
+}
+    
+   const mensajes = [
       "Carla: Super confiable, me abonaron al instante",
       "Juan: Recomiendo, son gente de confianza",
       "Joel: Atienden rápido, buena atención",
       "Mica: Me respondieron enseguida",
       "Leo: Muy serios, pagan sin vueltas",
       "Tati: Me gusta la atención que tienen",
-      "Nico: Pagué y en 5 minutos tenía saldo",
+      "Nico: Cargue y en al instante tenía saldo",
+      "Sofi: La plataforma tiene sus dias, pero si paga",
+      "Nacho: Lore de la suerte",
+      "Joa: Valentina muy buena atencion",
+      "Simon: Los cinco payasos me largo, que suerte",
       "Romi: Excelente trato, muy atentos",
       "Fede: El mejor servicio de todos",
       "Flor: Siempre activos, confiables"
